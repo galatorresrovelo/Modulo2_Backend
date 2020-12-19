@@ -2,18 +2,18 @@ const express = require('express');
 const router  = express.Router();
 
 const bcrypt = require("bcrypt");
-const colaborador = require ("../models/Colaborador");
+const Colaborador = require ("../models/Colaborador");
 const jwt = require("jsonwebtoken");
+const { veriToken, checkRole } = require ("../utils/auth");
 
 
 /* POST Registro */
-router.post('/registro', (req, res, next) => {
-  const {email,password,confirmapassword,nombre,_maquina,horario_entrada, horario_salida} = req.body;
-   if(password !== confirmapassword)
-   return res.status(403).json({msg:"Las contraseñas no coinciden"})
+router.post('/registro', veriToken,checkRole(['Supervisor','Administrador']), (req, res, next) => {
+  const {password,confirmapassword, ...userValue} = req.body;
+     if(password !== confirmapassword) return res.status(403).json({msg:"Las contraseñas no coinciden"})
    bcrypt.hash(password,10)
    .then((hashedPassword)=>{
-       const colaborador = {email, nombre, password:hashedPassword,_maquina, horario_entrada,horario_salida};
+       const colaborador = {password:hashedPassword,...userValue};
        Colaborador.create(colaborador).then(()=>{
            res.status(200).json({msg:'Colaborador creado con éxito'});
        }).catch ((error)=>{
@@ -55,5 +55,21 @@ router.post("/salir",(req,res,next)=>{
     res.clearCookie("token").json({msg:"Vuelve pronto"})
 
 })
+
+
+  //Editar (Update)
+        //post  quiere todas las llaves
+        //patch solo quiere una para poder trabajar
+        router.patch('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
+            const {id} = req.params;
+            Colaborador.findByIdAndUpdate(id, req.body,{new:true})
+               .then((colaborador)=>{
+                   res.status(200).json({result:colaborador})
+               })
+               .catch((error)=> {
+                   res.status(400).json({msg:"Algo salio mal", error})
+               })
+           });
+          
 
 module.exports = router;
