@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 // importar lo importante
 const Cliente = require ('../models/Cliente');
-const { veriToken } = require ("../utils/auth");
+const { veriToken, checkRole } = require ("../utils/auth");
 /* GET cliente page. 
 CRUD = Create*, Read*, Update* & Delete.
 */
 
-router.post('/', veriToken, (req, res, next)=> { 
+router.post('/',veriToken,checkRole(['Supervisor','Administrador']), (req, res, next)=> { 
     //voy a sacar el de la persona loggeada
     //crear un cliente
     const { _id: _colaborador } = req.colaborador
@@ -24,7 +24,7 @@ router.post('/', veriToken, (req, res, next)=> {
 //Editar (Update)
 //post  quiere todas las llaves
 //patch solo quiere una para poder trabajar
-router.patch('/:id',veriToken, (req,res,next)=>{
+router.patch('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
  const {id} = req.params;
 
  Property.findByIdAndUpdate(id, req.body,{new:true})

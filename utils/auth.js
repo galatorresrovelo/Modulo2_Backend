@@ -43,3 +43,4 @@ exports.clearRes = (data) => {
     //{key:"value"}
     return cleanedData
 }
+

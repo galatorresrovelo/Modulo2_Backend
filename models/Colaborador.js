@@ -1,4 +1,4 @@
-const {Schema, model} = require ("mongoose");
+const {Schema, model,models} = require ("mongoose");
 
 const colaboradorSchema = new Schema(
 { 
@@ -26,7 +26,7 @@ const colaboradorSchema = new Schema(
        _maquina:{
         type:Schema.Types.ObjectId,
         ref:"Maquina",
-        required:[true,"Tiene que tener una máquina asignada"]
+        // required:[true,"Tiene que tener una máquina asignada"]
        },
 
         email:{
@@ -35,7 +35,7 @@ const colaboradorSchema = new Schema(
         validate:{
             message:"El email ya tiene una cuenta asociada",
             validator: async ( email ) => {
-                const items = await mongoose.models["Colaborador"].count({email})
+                const items = await models["Colaborador"].count({email})
                 return items < 1
             },
         },
