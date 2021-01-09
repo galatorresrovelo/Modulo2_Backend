@@ -43,6 +43,7 @@ const clienteRouter = require("./routes/cliente");
 const pedidoRouter = require("./routes/pedido");
 const graficosRouter = require("./routes/graficos");
 const maquinaRouter = require("./routes/maquina");
+const adminRouter = require("./routes/admin")
 
 app.use('/api', indexRouter);
 app.use('/api/colaborador', colaboradorRouter)
@@ -50,6 +51,7 @@ app.use("/api/cliente",clienteRouter);
 app.use("/api/pedido", pedidoRouter);
 app.use("/api/graficos", graficosRouter);
 app.use("/api/maquina", maquinaRouter);
+app.use("/api/admin", adminRouter);
 
 
 module.exports = app;

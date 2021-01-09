@@ -52,8 +52,7 @@ router.post('/ingreso', (req, res, next) => {
 });
 
 router.post("/salir",(req,res,next)=>{
-    res.clearCookie("token").json({msg:"Vuelve pronto"})
-
+res.clearCookie("token").json({msg:"Vuelve pronto"})
 })
 
 
