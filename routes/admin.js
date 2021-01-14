@@ -4,23 +4,16 @@ const router = express.Router();
 const Cliente = require ('../models/Cliente');
 const Colaborador = require ('../models/Colaborador');
 const Maquina = require ('../models/Maquina');
+const Pedido = require ('../models/Pedido')
 const { veriToken, checkRole } = require ("../utils/auth");
 
 router.get('/listacolaboradores', veriToken, checkRole(['Supervisor','Administrador']), (req, res, next)=> {
-  Colaborador.find({rol:'Estandar'})
+  Colaborador.find({rol:'Estandar'}).populate('_maquina')
     .then((colaboradores)=>{
         if(colaboradores.length){
           colaboradores = colaboradores.map((item,index)=>{
-            const sindata = item.toObject();
-            delete sindata.password
-            delete sindata.createdAt
-            delete sindata.updatedAt
-            delete sindata.email
-            delete sindata.horario_entrada
-            delete sindata.horario_salida
-            delete sindata.estatus
-            delete sindata.rol
-            return sindata
+            const data = item.toObject();
+            return data
            }
           )
         }
@@ -32,17 +25,12 @@ router.get('/listacolaboradores', veriToken, checkRole(['Supervisor','Administra
 });
 
 router.get('/listamaquinas', veriToken, checkRole(['Supervisor','Administrador']), (req, res, next)=> {
-  Maquina.find({estado:'Activa'})
+  Maquina.find({estado:'Activa'}).populate('_colaborador')
     .then((maquinas)=>{
       if(maquinas.length){
         maquinas = maquinas.map((item,index)=>{
-          const sindata = item.toObject();
-          delete sindata.capacidad
-          delete sindata.createdAt
-          delete sindata.updatedAt
-          delete sindata.estado
-          delete sindata._colaborador
-          return sindata
+          const data = item.toObject();
+          return data
          }
         )
       }
@@ -58,16 +46,29 @@ router.get('/listaclientes', veriToken, checkRole(['Supervisor','Administrador']
     .then((clientes)=>{
       if(clientes.length){
         clientes = clientes.map((item,index)=>{
-          const sindata = item.toObject();
-          delete sindata.año_de_ingreso
-          delete sindata._pedido
-          delete sindata.updatedAt
-          delete sindata.createdAt
-          return sindata
+          const data = item.toObject();
+          return data
          }
         )
       }
         res.status(200).json({result:clientes})
+    })
+    .catch((error)=>{
+        res.status(400).json({msg:"Algo salió mal", error})
+    })
+});
+
+router.get('/listapedidos', veriToken, checkRole(['Supervisor','Administrador']), (req, res, next)=> {
+  Pedido.find().populate('_cliente').populate('_colaborador')
+    .then((pedidos)=>{
+      if(pedidos.length){
+        pedidos = pedidos.map((item,index)=>{
+          const data = item.toObject();
+          return data
+         }
+        )
+      }
+        res.status(200).json({result:pedidos})
     })
     .catch((error)=>{
         res.status(400).json({msg:"Algo salió mal", error})

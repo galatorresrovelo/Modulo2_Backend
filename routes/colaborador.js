@@ -69,6 +69,17 @@ res.clearCookie("token").json({msg:"Vuelve pronto"})
                    res.status(400).json({msg:"Algo salio mal", error})
                })
            });
+
+           router.get('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
+            const {id} = req.params;
+            Colaborador.findById(id)
+               .then((colaborador)=>{
+                   res.status(200).json({result:colaborador})
+               })
+               .catch((error)=> {
+                   res.status(400).json({msg:"Algo salio mal", error})
+               })
+           });
           
 
 module.exports = router;
