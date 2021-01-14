@@ -27,7 +27,7 @@ router.post('/',veriToken,checkRole(['Supervisor','Administrador']), (req, res, 
 router.patch('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
  const {id} = req.params;
 
- Property.findByIdAndUpdate(id, req.body,{new:true})
+ Cliente.findByIdAndUpdate(id, req.body,{new:true})
     .then((cliente)=>{
         res.status(200).json({result:cliente})
     })
@@ -39,7 +39,7 @@ router.patch('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,re
 router.get('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
     const {id} = req.params;
    
-    Property.findById(id)
+    Cliente.findById(id)
        .then((cliente)=>{
            res.status(200).json({result:cliente})
        })
