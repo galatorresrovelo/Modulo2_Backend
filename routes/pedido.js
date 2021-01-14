@@ -90,4 +90,15 @@ router.patch('/estatus/:id',veriToken, (req,res,next)=>{
        })
    });
 
+   router.get('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
+    const {id} = req.params;
+    Pedido.findById(id)
+       .then((pedido)=>{
+           res.status(200).json({result:pedido})
+       })
+       .catch((error)=> {
+           res.status(400).json({msg:"Algo salio mal", error})
+       })
+   });
+
    module.exports = router;

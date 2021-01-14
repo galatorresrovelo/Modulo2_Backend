@@ -36,5 +36,15 @@ router.patch('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,re
     })
 });
 
-
+router.get('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
+    const {id} = req.params;
+   
+    Property.findById(id)
+       .then((cliente)=>{
+           res.status(200).json({result:cliente})
+       })
+       .catch((error)=> {
+           res.status(400).json({msg:"Algo salio mal", error})
+       })
+   });
 module.exports = router;
