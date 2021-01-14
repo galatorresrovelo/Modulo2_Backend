@@ -52,8 +52,7 @@ router.post('/ingreso', (req, res, next) => {
 });
 
 router.post("/salir",(req,res,next)=>{
-    res.clearCookie("token").json({msg:"Vuelve pronto"})
-
+res.clearCookie("token").json({msg:"Vuelve pronto"})
 })
 
 
@@ -63,6 +62,17 @@ router.post("/salir",(req,res,next)=>{
         router.patch('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
             const {id} = req.params;
             Colaborador.findByIdAndUpdate(id, req.body,{new:true})
+               .then((colaborador)=>{
+                   res.status(200).json({result:colaborador})
+               })
+               .catch((error)=> {
+                   res.status(400).json({msg:"Algo salio mal", error})
+               })
+           });
+
+           router.get('/:id',veriToken,checkRole(['Supervisor','Administrador']), (req,res,next)=>{
+            const {id} = req.params;
+            Colaborador.findById(id)
                .then((colaborador)=>{
                    res.status(200).json({result:colaborador})
                })
