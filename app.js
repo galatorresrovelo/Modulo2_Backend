@@ -53,5 +53,10 @@ app.use("/api/graficos", graficosRouter);
 app.use("/api/maquina", maquinaRouter);
 app.use("/api/admin", adminRouter);
 
-
+//esto es muy importante es para seguir en la ruta despues de actualizar
+//podamos entrar a cualquier ruta
+app.use("*", (req,res)=>{
+  res.sendFile(path.join(__dirname, "public","index.html"));
+ });
+ 
 module.exports = app;
