@@ -24,7 +24,7 @@ mongoose.connect(process.env.DB,{
 const app = express();
 app.use (
   cors({
-    origin:["http://localhost:3001","https://"],
+    origin:["http://localhost:3001","https://managertracker.herokuapp.com"],
     credentials: true,  
   })
 )
@@ -58,5 +58,5 @@ app.use("/api/admin", adminRouter);
 app.use("*", (req,res)=>{
   res.sendFile(path.join(__dirname, "public","index.html"));
  });
- 
+
 module.exports = app;
